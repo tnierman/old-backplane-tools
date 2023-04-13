@@ -15,12 +15,12 @@ import (
 
 // Tool implements the interface to manage the 'ocm-cli' binary
 type Tool struct {
-	source *github.GithubTool
+	source *github.GithubSource
 }
 
 func NewTool() *Tool {
 	t := &Tool{
-		source: github.NewGithubTool("openshift-online", "ocm-cli"),
+		source: github.NewGithubSource("openshift-online", "ocm-cli"),
 	}
 	return t
 }
@@ -75,10 +75,10 @@ assetLoop:
 		return fmt.Errorf("failed to create version-specific directory '%s': %w", versionedDir, err)
 	}
 
-	//err = t.source.DownloadReleaseAssets([]gogithub.ReleaseAsset{checksumAsset, ocmBinaryAsset}, versionedDir)
-	//if err != nil {
-	//	return fmt.Errorf("failed to download one or more assets: %w", err)
-	//}
+	err = t.source.DownloadReleaseAssets([]gogithub.ReleaseAsset{checksumAsset, ocmBinaryAsset}, versionedDir)
+	if err != nil {
+		return fmt.Errorf("failed to download one or more assets: %w", err)
+	}
 
 	// Verify checksum of downloaded assets
 	ocmBinaryFilepath := filepath.Join(versionedDir, ocmBinaryAsset.GetName())

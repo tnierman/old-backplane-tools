@@ -10,7 +10,7 @@ import (
 	"github.com/google/go-github/github"
 )
 
-type GithubTool struct {
+type GithubSource struct {
 	// Owner specifies the organization or user this tool belongs to
 	Owner string
 
@@ -21,8 +21,8 @@ type GithubTool struct {
 	client *github.Client
 }
 
-func NewGithubTool(owner, repo string) *GithubTool {
-	tool := &GithubTool{
+func NewGithubSource(owner, repo string) *GithubSource {
+	tool := &GithubSource{
 		Owner: owner,
 		Repo: repo,
 		client: github.NewClient(nil),
@@ -31,7 +31,7 @@ func NewGithubTool(owner, repo string) *GithubTool {
 }
 
 // ListReleases returns all releases of the tool from Github
-func (t GithubTool) ListReleases(opts *github.ListOptions) ([]*github.RepositoryRelease, error){
+func (t GithubSource) ListReleases(opts *github.ListOptions) ([]*github.RepositoryRelease, error){
 	releases, response, err := t.client.Repositories.ListReleases(context.TODO(), t.Owner, t.Repo, &github.ListOptions{})
 	if err != nil {
 		return []*github.RepositoryRelease{}, err
@@ -44,7 +44,7 @@ func (t GithubTool) ListReleases(opts *github.ListOptions) ([]*github.Repository
 }
 
 // FetchRelease returns the specified release of the tool from Github
-func (t GithubTool) FetchRelease(releaseID int64) (*github.RepositoryRelease, error) {
+func (t GithubSource) FetchRelease(releaseID int64) (*github.RepositoryRelease, error) {
 	release, response, err := t.client.Repositories.GetRelease(context.TODO(), t.Owner, t.Repo, releaseID)
 	if err != nil {
 		return &github.RepositoryRelease{}, err
@@ -57,7 +57,7 @@ func (t GithubTool) FetchRelease(releaseID int64) (*github.RepositoryRelease, er
 }
 
 // FetchLatestRelease returns the latest release of the tool from Github
-func (t GithubTool) FetchLatestRelease() (*github.RepositoryRelease, error) {
+func (t GithubSource) FetchLatestRelease() (*github.RepositoryRelease, error) {
 	release, response, err := t.client.Repositories.GetLatestRelease(context.TODO(), t.Owner, t.Repo)
 	if err != nil {
 		return &github.RepositoryRelease{}, err
@@ -71,7 +71,7 @@ func (t GithubTool) FetchLatestRelease() (*github.RepositoryRelease, error) {
 
 // DownloadReleaseAssets downloads the provided Github release assets and stores them in the given directory.
 // The resulting files will match the assets' names
-func (t GithubTool) DownloadReleaseAssets(assets []github.ReleaseAsset, dir string) error {
+func (t GithubSource) DownloadReleaseAssets(assets []github.ReleaseAsset, dir string) error {
 	for _, asset := range assets {
 		fmt.Println("Attempting to download asset: ", asset.GetName())
 		reader, redirectURL, err := t.client.Repositories.DownloadReleaseAsset(context.TODO(), t.Owner, t.Repo, asset.GetID())
