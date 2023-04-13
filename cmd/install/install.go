@@ -62,7 +62,7 @@ func installTools(tools []tool.Tool) error {
 
 	for _, tool := range tools {
 		fmt.Println("")
-		fmt.Printf("Attempting to install %s\n", tool.Name())
+		fmt.Printf("Installing %s\n", tool.Name())
 		err = tool.Install(dir)
 		if err != nil {
 			fmt.Printf("Encountered error while installing %s: %v\n", tool.Name(), err)
