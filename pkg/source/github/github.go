@@ -85,8 +85,6 @@ func (t GithubSource) DownloadReleaseAssets(assets []github.ReleaseAsset, dir st
 			}
 		}()
 		if redirectURL != "" {
-			// TODO - Download from the redirect manually
-			fmt.Println("redirect is set to: ", redirectURL)
 			resp, err := http.Get(redirectURL)
 			if err != nil {
 				return err

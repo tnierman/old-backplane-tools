@@ -87,8 +87,8 @@ assetLoop:
 		return fmt.Errorf("failed to read ocm-cli binary file '%s' while generating sha256sum: %w", ocmBinaryFilepath, err)
 	}
 	sumBytes := sha256.Sum256(fileBytes)
+	// TODO - there's probably a better way to do this
 	binarySum := fmt.Sprintf("%x", sumBytes[:])
-	fmt.Println("sum: ", binarySum)
 
 	checksumFilePath := filepath.Join(versionedDir, checksumAsset.GetName())
 	checksumBytes, err := ioutil.ReadFile(checksumFilePath)
@@ -96,7 +96,6 @@ assetLoop:
 		return fmt.Errorf("failed to read ocm-cli checksum file '%s': %w", checksumFilePath, err)
 	}
 	checksum := strings.Split(string(checksumBytes), " ")[0]
-	fmt.Println("checksum: ", checksum)
 	if strings.TrimSpace(binarySum) != strings.TrimSpace(checksum) {
 		fmt.Printf("WARNING: Checksum for ocm-cli does not match the calculated value. Please retry installation. If issue persists, this tool can be downloaded manually at %s\n", ocmBinaryAsset.GetBrowserDownloadURL())
 	}
