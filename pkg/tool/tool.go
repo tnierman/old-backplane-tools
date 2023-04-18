@@ -2,12 +2,11 @@ package tool
 
 import (
 	"fmt"
+	"github.com/openshift/backplane-tools/pkg/tool/ocm"
+	"github.com/openshift/backplane-tools/pkg/utils"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/openshift/backplane-tools/pkg/tool/ocm"
-	"github.com/openshift/backplane-tools/pkg/utils"
 )
 
 type Tool interface {
@@ -20,19 +19,28 @@ type Tool interface {
 	Remove(rootDir, latestDir string) error
 }
 
-var (
-	Map   map[string]Tool
-	Names []string
-)
+type Map map[string]Tool
 
-func init() {
-	Map = map[string]Tool{}
-	Names = []string{}
+func (m *Map) Names() []string {
+	return utils.Keys(*m)
+}
 
-	// Compile a list of tools available to manage
+var toolMap Map
+
+func newMap() Map {
+	toolMap = Map{}
+
 	ocmTool := ocm.NewTool()
-	Map[ocmTool.Name()] = ocmTool
-	Names = append(Names, ocmTool.Name())
+	toolMap[ocmTool.Name()] = ocmTool
+
+	return toolMap
+}
+
+func GetMap() Map {
+	if toolMap == nil {
+		return newMap()
+	}
+	return toolMap
 }
 
 // Remove removes the provided tools from the install directory
