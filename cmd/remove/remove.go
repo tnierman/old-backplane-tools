@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/openshift/backplane-tools/pkg/tool"
 	"github.com/openshift/backplane-tools/pkg/utils"
+	"github.com/spf13/cobra"
 )
 
 func Cmd() *cobra.Command {
-	removeCmd := &cobra.Command {
-		Use: fmt.Sprintf("remove [all|%s]", strings.Join(tool.Names, "|")),
-		Args: cobra.OnlyValidArgs,
+	removeCmd := &cobra.Command{
+		Use:       fmt.Sprintf("remove [all|%s]", strings.Join(tool.Names, "|")),
+		Args:      cobra.OnlyValidArgs,
 		ValidArgs: append(tool.Names, "all"),
-		Short: "Remove a tool",
-		Long: "Removes one or more tools from the given list. It's valid to specify multiple tools: in this case, all tools provided will be removed. If 'all' is explicitly passed, then the entire tool directory will be removed, providing a clean slate for reinstall. If no specific tools are provided, no action is taken",
-		RunE: run,
+		Short:     "Remove a tool",
+		Long:      "Removes one or more tools from the given list. It's valid to specify multiple tools: in this case, all tools provided will be removed. If 'all' is explicitly passed, then the entire tool directory will be removed, providing a clean slate for reinstall. If no specific tools are provided, no action is taken",
+		RunE:      run,
 	}
 	return removeCmd
 }

@@ -3,7 +3,6 @@ package ocm
 import (
 	"crypto/sha256"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -15,7 +14,7 @@ import (
 
 // Tool implements the interface to manage the 'ocm-cli' binary
 type Tool struct {
-	source *github.GithubSource
+	source *github.Source
 }
 
 func NewTool() *Tool {
@@ -83,7 +82,7 @@ assetLoop:
 
 	// Verify checksum of downloaded assets
 	ocmBinaryFilepath := filepath.Join(versionedDir, ocmBinaryAsset.GetName())
-	fileBytes, err := ioutil.ReadFile(ocmBinaryFilepath)
+	fileBytes, err := os.ReadFile(ocmBinaryFilepath)
 	if err != nil {
 		return fmt.Errorf("failed to read ocm-cli binary file '%s' while generating sha256sum: %w", ocmBinaryFilepath, err)
 	}
@@ -92,7 +91,7 @@ assetLoop:
 	binarySum := fmt.Sprintf("%x", sumBytes[:])
 
 	checksumFilePath := filepath.Join(versionedDir, checksumAsset.GetName())
-	checksumBytes, err := ioutil.ReadFile(checksumFilePath)
+	checksumBytes, err := os.ReadFile(checksumFilePath)
 	if err != nil {
 		return fmt.Errorf("failed to read ocm-cli checksum file '%s': %w", checksumFilePath, err)
 	}

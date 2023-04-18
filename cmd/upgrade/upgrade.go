@@ -4,20 +4,20 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/openshift/backplane-tools/pkg/tool"
 	"github.com/openshift/backplane-tools/pkg/utils"
+	"github.com/spf13/cobra"
 )
 
 // Cmd returns the Command used to invoke the upgrade logic
 func Cmd() *cobra.Command {
 	upgradeCmd := &cobra.Command{
-		Use: fmt.Sprintf("upgrade [all|%s]", strings.Join(tool.Names, "|")),
-		Args: cobra.OnlyValidArgs,
+		Use:       fmt.Sprintf("upgrade [all|%s]", strings.Join(tool.Names, "|")),
+		Args:      cobra.OnlyValidArgs,
 		ValidArgs: append(tool.Names, "all"),
-		Short: "Upgrade an existing tool",
-		Long: "Upgrades one or more tools from the provided list. It's valid to specify multiple tools: in this case, all tools provided will be upgraded. If no specific tools are provided, all are (installed and) upgraded by default.",
-		RunE: run,
+		Short:     "Upgrade an existing tool",
+		Long:      "Upgrades one or more tools from the provided list. It's valid to specify multiple tools: in this case, all tools provided will be upgraded. If no specific tools are provided, all are (installed and) upgraded by default.",
+		RunE:      run,
 	}
 	return upgradeCmd
 }

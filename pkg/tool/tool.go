@@ -3,13 +3,12 @@ package tool
 import (
 	"fmt"
 	"os"
-	"strings"
 	"path/filepath"
+	"strings"
 
 	"github.com/openshift/backplane-tools/pkg/tool/ocm"
 	"github.com/openshift/backplane-tools/pkg/utils"
 )
-
 
 type Tool interface {
 	Name() string
@@ -21,9 +20,8 @@ type Tool interface {
 	Remove(rootDir, latestDir string) error
 }
 
-
 var (
-	Map map[string]Tool
+	Map   map[string]Tool
 	Names []string
 )
 
@@ -63,7 +61,7 @@ func Remove(tools []Tool) error {
 	return nil
 }
 
-// Install creates the directories necessary to install the provided tools and 
+// Install creates the directories necessary to install the provided tools and
 func Install(tools []Tool) error {
 	// Create the root directory for all tools to install into
 	installDir, err := createInstallDir()
@@ -72,7 +70,7 @@ func Install(tools []Tool) error {
 	}
 
 	// Create the 'latest' directory which contains symlinks to the latest versions of each tool
-	latestDir, err := createLatestDir(installDir)
+	latestDir, err := createLatestDir()
 	if err != nil {
 		return fmt.Errorf("failed to create latest directory: %w", err)
 	}
@@ -129,7 +127,7 @@ func LatestDir() (string, error) {
 	return filepath.Join(installDir, "latest"), nil
 }
 
-func createLatestDir(parentDir string) (string, error) {
+func createLatestDir() (string, error) {
 	latestDir, err := LatestDir()
 	if err != nil {
 		return "", fmt.Errorf("could not determine latest release path: %w", err)
