@@ -1,4 +1,4 @@
-module github.com/tnierman/backplane-tools
+module github.com/openshift/backplane-tools
 
 go 1.20
 

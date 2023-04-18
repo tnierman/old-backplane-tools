@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	gogithub "github.com/google/go-github/github"
-	"github.com/tnierman/backplane-tools/pkg/source/github"
+	"github.com/openshift/backplane-tools/pkg/source/github"
 )
 
 // Tool implements the interface to manage the 'ocm-cli' binary

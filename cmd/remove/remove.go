@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/tnierman/backplane-tools/pkg/tool"
-	"github.com/tnierman/backplane-tools/pkg/utils"
+	"github.com/openshift/backplane-tools/pkg/tool"
+	"github.com/openshift/backplane-tools/pkg/utils"
 )
 
 func Cmd() *cobra.Command {

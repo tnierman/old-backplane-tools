@@ -4,9 +4,9 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/tnierman/backplane-tools/cmd/install"
-	"github.com/tnierman/backplane-tools/cmd/remove"
-	"github.com/tnierman/backplane-tools/cmd/upgrade"
+	"github.com/openshift/backplane-tools/cmd/install"
+	"github.com/openshift/backplane-tools/cmd/remove"
+	"github.com/openshift/backplane-tools/cmd/upgrade"
 )
 
 var cmd = cobra.Command{

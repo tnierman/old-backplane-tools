@@ -6,9 +6,8 @@ import (
 	"strings"
 	"path/filepath"
 
-//	"github.com/tnierman/backplane-tools/pkg/tool/oc"
-	"github.com/tnierman/backplane-tools/pkg/tool/ocm"
-	"github.com/tnierman/backplane-tools/pkg/utils"
+	"github.com/openshift/backplane-tools/pkg/tool/ocm"
+	"github.com/openshift/backplane-tools/pkg/utils"
 )
 
 
