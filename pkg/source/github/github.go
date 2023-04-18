@@ -31,8 +31,8 @@ func NewGithubSource(owner, repo string) *GithubSource {
 }
 
 // ListReleases returns all releases of the tool from Github
-func (t GithubSource) ListReleases(opts *github.ListOptions) ([]*github.RepositoryRelease, error){
-	releases, response, err := t.client.Repositories.ListReleases(context.TODO(), t.Owner, t.Repo, &github.ListOptions{})
+func (s GithubSource) ListReleases(opts *github.ListOptions) ([]*github.RepositoryRelease, error){
+	releases, response, err := s.client.Repositories.ListReleases(context.TODO(), s.Owner, s.Repo, &github.ListOptions{})
 	if err != nil {
 		return []*github.RepositoryRelease{}, err
 	}
@@ -44,8 +44,8 @@ func (t GithubSource) ListReleases(opts *github.ListOptions) ([]*github.Reposito
 }
 
 // FetchRelease returns the specified release of the tool from Github
-func (t GithubSource) FetchRelease(releaseID int64) (*github.RepositoryRelease, error) {
-	release, response, err := t.client.Repositories.GetRelease(context.TODO(), t.Owner, t.Repo, releaseID)
+func (s GithubSource) FetchRelease(releaseID int64) (*github.RepositoryRelease, error) {
+	release, response, err := s.client.Repositories.GetRelease(context.TODO(), s.Owner, s.Repo, releaseID)
 	if err != nil {
 		return &github.RepositoryRelease{}, err
 	}
@@ -57,8 +57,8 @@ func (t GithubSource) FetchRelease(releaseID int64) (*github.RepositoryRelease, 
 }
 
 // FetchLatestRelease returns the latest release of the tool from Github
-func (t GithubSource) FetchLatestRelease() (*github.RepositoryRelease, error) {
-	release, response, err := t.client.Repositories.GetLatestRelease(context.TODO(), t.Owner, t.Repo)
+func (s GithubSource) FetchLatestRelease() (*github.RepositoryRelease, error) {
+	release, response, err := s.client.Repositories.GetLatestRelease(context.TODO(), s.Owner, s.Repo)
 	if err != nil {
 		return &github.RepositoryRelease{}, err
 	}
@@ -71,10 +71,9 @@ func (t GithubSource) FetchLatestRelease() (*github.RepositoryRelease, error) {
 
 // DownloadReleaseAssets downloads the provided Github release assets and stores them in the given directory.
 // The resulting files will match the assets' names
-func (t GithubSource) DownloadReleaseAssets(assets []github.ReleaseAsset, dir string) error {
+func (s GithubSource) DownloadReleaseAssets(assets []github.ReleaseAsset, dir string) error {
 	for _, asset := range assets {
-		fmt.Println("Attempting to download asset: ", asset.GetName())
-		reader, redirectURL, err := t.client.Repositories.DownloadReleaseAsset(context.TODO(), t.Owner, t.Repo, asset.GetID())
+		reader, redirectURL, err := s.client.Repositories.DownloadReleaseAsset(context.TODO(), s.Owner, s.Repo, asset.GetID())
 		if err != nil {
 			return err
 		}
@@ -92,7 +91,6 @@ func (t GithubSource) DownloadReleaseAssets(assets []github.ReleaseAsset, dir st
 			reader = resp.Body
 		}
 		filePath := filepath.Join(dir, asset.GetName())
-		fmt.Println("filepath: ", filePath)
 		file, err := os.Create(filePath)
 		if err != nil {
 			return err

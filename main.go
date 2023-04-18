@@ -5,10 +5,12 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/tnierman/backplane-tools/cmd/install"
+	"github.com/tnierman/backplane-tools/cmd/remove"
+	"github.com/tnierman/backplane-tools/cmd/upgrade"
 )
 
 var cmd = cobra.Command{
-	Use: "backplane-tool",
+	Use: "backplane-tools",
 	Short: "An OpenShift tool manager",
 	Long: "This applications manages the tools needed to interact with OpenShift clusters",
 	RunE: help,
@@ -21,6 +23,8 @@ func help(cmd *cobra.Command, _ []string) error {
 // Add subcommands
 func init() {
 	cmd.AddCommand(install.Cmd())
+	cmd.AddCommand(upgrade.Cmd())
+	cmd.AddCommand(remove.Cmd())
 }
 
 func main() {

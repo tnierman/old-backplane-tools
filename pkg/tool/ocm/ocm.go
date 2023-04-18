@@ -29,7 +29,7 @@ func (t *Tool) Name() string {
 	return "ocm"
 }
 
-func (t *Tool) Install(rootDir string) error {
+func (t *Tool) Install(rootDir, latestDir string) error {
 	// Pull latest release from GH
 	release, err := t.source.FetchLatestRelease()
 	if err != nil {
@@ -69,7 +69,8 @@ assetLoop:
 	}
 
 	// Download the arch- & os-specific assets
-	versionedDir := filepath.Join(rootDir, "ocm", release.GetTagName())
+	toolDir := t.toolDir(rootDir)
+	versionedDir := filepath.Join(toolDir, release.GetTagName())
 	err = os.MkdirAll(versionedDir, os.FileMode(0755))
 	if err != nil {
 		return fmt.Errorf("failed to create version-specific directory '%s': %w", versionedDir, err)
@@ -98,14 +99,50 @@ assetLoop:
 	checksum := strings.Split(string(checksumBytes), " ")[0]
 	if strings.TrimSpace(binarySum) != strings.TrimSpace(checksum) {
 		fmt.Printf("WARNING: Checksum for ocm-cli does not match the calculated value. Please retry installation. If issue persists, this tool can be downloaded manually at %s\n", ocmBinaryAsset.GetBrowserDownloadURL())
+		// We shouldn't link this binary to latest if the checksum isn't valid
+		return nil
+	}
+
+	// Link as latest
+	latestFilePath := t.symlinkPath(latestDir)
+	err = os.Remove(latestFilePath)
+	if err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("failed to remove existing 'ocm' binary at '%s': %w", latestDir, err)
+	}
+
+	err = os.Symlink(ocmBinaryFilepath, latestFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to link new 'ocm' binary to '%s': %w", latestDir, err)
+	}
+	return nil
+}
+
+// toolDir returns this tool's specific directory given the root directory all tools are installed in
+func (t *Tool) toolDir(rootDir string) string {
+	return filepath.Join(rootDir, "ocm")
+}
+
+func (t *Tool) symlinkPath(latestDir string) string {
+	return filepath.Join(latestDir, "ocm")
+}
+
+func (t *Tool) Remove(rootDir, latestDir string) error {
+	// Remove all binaries owned by this tool
+	toolDir := t.toolDir(rootDir)
+	err := os.RemoveAll(toolDir)
+	if err != nil {
+		return fmt.Errorf("failed to remove %s: %w", toolDir, err)
+	}
+
+	// Remove all symlinks owned by this tool
+	latestFilePath := t.symlinkPath(latestDir)
+	err = os.Remove(latestFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to remove symlinked file %s: %w", latestFilePath, err)
 	}
 	return nil
 }
 
 func (t *Tool) Configure() error {
-	return nil
-}
-
-func (t *Tool) Remove() error {
 	return nil
 }
