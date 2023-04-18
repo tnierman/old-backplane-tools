@@ -10,19 +10,22 @@ import (
 )
 
 func Cmd() *cobra.Command {
+	toolMap := tool.GetMap()
 	removeCmd := &cobra.Command{
-		Use:       fmt.Sprintf("remove [all|%s]", strings.Join(tool.Names, "|")),
+		Use:       fmt.Sprintf("remove [all|%s]", strings.Join(toolMap.Names(), "|")),
 		Args:      cobra.OnlyValidArgs,
-		ValidArgs: append(tool.Names, "all"),
+		ValidArgs: append(toolMap.Names(), "all"),
 		Short:     "Remove a tool",
 		Long:      "Removes one or more tools from the given list. It's valid to specify multiple tools: in this case, all tools provided will be removed. If 'all' is explicitly passed, then the entire tool directory will be removed, providing a clean slate for reinstall. If no specific tools are provided, no action is taken",
-		RunE:      run,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return run(cmd, args, toolMap)
+		},
 	}
 	return removeCmd
 }
 
 // run removes the tool(s) specified by the provided positional args
-func run(cmd *cobra.Command, args []string) error {
+func run(cmd *cobra.Command, args []string, toolMap tool.Map) error {
 	if len(args) == 0 {
 		fmt.Println("No tools specified to be removed. In order to remove all tools, explicitly specify 'all'")
 		return nil
@@ -35,7 +38,7 @@ func run(cmd *cobra.Command, args []string) error {
 	removeList := []tool.Tool{}
 	for _, toolName := range args {
 		fmt.Printf("- %s\n", toolName)
-		removeList = append(removeList, tool.Map[toolName])
+		removeList = append(removeList, toolMap[toolName])
 	}
 
 	err := tool.Remove(removeList)
