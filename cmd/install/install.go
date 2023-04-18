@@ -4,20 +4,20 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/openshift/backplane-tools/pkg/tool"
 	"github.com/openshift/backplane-tools/pkg/utils"
+	"github.com/spf13/cobra"
 )
 
 // Cmd returns the Command used to invoke the installation logic
 func Cmd() *cobra.Command {
 	installCmd := &cobra.Command{
-		Use: fmt.Sprintf("install [all|%s]", strings.Join(tool.Names, "|")),
-		Args: cobra.OnlyValidArgs,
+		Use:       fmt.Sprintf("install [all|%s]", strings.Join(tool.Names, "|")),
+		Args:      cobra.OnlyValidArgs,
 		ValidArgs: append(tool.Names, "all"),
-		Short: "Install a new tool",
-		Long: "Installs one or more tools from the given list. It's valid to specify multiple tools: in this case, all tools provided will be installed. If no specific tools are provided, all are installed by default.",
-		RunE: run,
+		Short:     "Install a new tool",
+		Long:      "Installs one or more tools from the given list. It's valid to specify multiple tools: in this case, all tools provided will be installed. If no specific tools are provided, all are installed by default.",
+		RunE:      run,
 	}
 	return installCmd
 }
@@ -33,7 +33,7 @@ func run(cmd *cobra.Command, args []string) error {
 	installList := []tool.Tool{}
 	for _, toolName := range args {
 		fmt.Printf("- %s\n", toolName)
-		installList =  append(installList, tool.Map[toolName])
+		installList = append(installList, tool.Map[toolName])
 	}
 
 	err := tool.Install(installList)

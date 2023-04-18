@@ -7,7 +7,7 @@ import (
 )
 
 // Tool implements the interface to manage the 'openshift-client' (aka 'oc') binary
-type Tool struct {}
+type Tool struct{}
 
 func NewTool() *Tool {
 	return &Tool{}
